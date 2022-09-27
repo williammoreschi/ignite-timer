@@ -53,10 +53,18 @@ export const TaskInput = styled(BaseInput)`
   &::-webkit-calendar-picker-indicator {
     display: none !important;
   }
+
+  &:disabled {
+    border-bottom-color: transparent;
+  }
 `
 
 export const MinutesAmountInput = styled(BaseInput)`
   width: 4rem;
+
+  &:disabled {
+    border-bottom-color: transparent;
+  }
 `
 
 export const CountDownContainer = styled.div`
@@ -84,10 +92,8 @@ export const Separator = styled.div`
   line-height: 8rem;
 `
 
-export const StartCountDownButton = styled.button`
+const BaseCountDownButton = styled.button`
   width: 100%;
-  background: ${(props) => props.theme['green-500']};
-  color: ${(props) => props.theme['gray-100']};
   border-radius: 8px;
   border: none;
   cursor: pointer;
@@ -102,8 +108,24 @@ export const StartCountDownButton = styled.button`
     opacity: 0.7;
     cursor: not-allowed;
   }
+`
+export const StartCountDownButton = styled(BaseCountDownButton)`
+  background: ${(props) => props.theme['green-500']};
+  color: ${(props) => props.theme['gray-100']};
 
   &:not(:disabled):hover {
     background: ${(props) => props.theme['green-700']};
+  }
+`
+export const StoptCountDownButton = styled(BaseCountDownButton)`
+  background: ${(props) => props.theme['red-500']};
+  color: ${(props) => props.theme.white};
+
+  &:not(:disabled):hover {
+    background: ${(props) => props.theme['red-700']};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px ${(props) => props.theme['red-700']};
   }
 `
