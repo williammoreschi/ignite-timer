@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { HandPalm, Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
-import { differenceInSeconds } from 'date-fns'
+
 import {
   HomeContainer,
   StartCountDownButton,
@@ -50,37 +50,6 @@ export function Home() {
   })
 
   const activeCycles = cycles.find((cycle) => cycle.id === activeCyclesId)
-  const totalSeconds = activeCycles ? activeCycles.minutesAmount * 60 : 0
-
-  useEffect(() => {
-    let interval: number
-    if (activeCycles) {
-      interval = setInterval(() => {
-        const secondsDifference = differenceInSeconds(
-          new Date(),
-          activeCycles.startDate,
-        )
-
-        if (secondsDifference >= totalSeconds) {
-          setCycles((state) =>
-            state.map((cycle) => {
-              if (cycle.id === activeCyclesId) {
-                return { ...cycle, fineshedtDate: new Date() }
-              }
-              return cycle
-            }),
-          )
-          setAmountSecondsPassed(totalSeconds)
-        } else {
-          setAmountSecondsPassed(secondsDifference)
-        }
-      }, 1000)
-    }
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [activeCycles, activeCyclesId, totalSeconds])
 
   function handleCreateNewCycle(data: NewCycleForm) {
     const newCycle: ICycle = {
@@ -110,30 +79,21 @@ export function Home() {
     setActiveCyclesId(null)
   }
 
-  const currentSeconds = activeCycles ? totalSeconds - amountSecondsPassed : 0
-
-  const minutesAmount = Math.floor(currentSeconds / 60)
-  const secodsAmount = currentSeconds % 60
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secodsAmount).padStart(2, '0')
-
-  useEffect(() => {
-    if (activeCycles) {
-      document.title = `${minutes}:${seconds} - Ignite Timer`
-    } else {
-      document.title = `Ignite Timer`
-    }
-  }, [minutes, seconds, activeCycles])
-
   const task = watch('task')
   const isSubmitDisabled = !task
 
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)}>
-        <NewCyleForm />
+        <NewCyleForm activeCycles={activeCycles} register={register} />
 
-        <Countdown />
+        <Countdown
+          activeCycles={activeCycles}
+          activeCyclesId={activeCyclesId}
+          setCycles={setCycles}
+          amountSecondsPassed={amountSecondsPassed}
+          setAmountSecondsPassed={setAmountSecondsPassed}
+        />
 
         {activeCycles ? (
           <StoptCountDownButton

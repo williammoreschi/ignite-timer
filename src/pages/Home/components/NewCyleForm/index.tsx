@@ -1,6 +1,11 @@
 import { FormContainer, MinutesAmountInput, TaskInput } from './styles'
 
-export function NewCyleForm() {
+interface INewCycleFormProps {
+  register: any
+  activeCycles: any
+}
+
+export function NewCyleForm({ register, activeCycles }: INewCycleFormProps) {
   return (
     <FormContainer>
       <label htmlFor="task">Vou trabalhar em</label>
