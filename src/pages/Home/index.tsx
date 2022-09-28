@@ -21,6 +21,7 @@ interface ICycle {
   minutesAmount: number
   startDate: Date
   interruptDate?: Date
+  fineshedtDate?: Date
 }
 
 const newCycleFormValidationSchema = zod.object({
@@ -52,21 +53,37 @@ export function Home() {
   })
 
   const activeCycles = cycles.find((cycle) => cycle.id === activeCyclesId)
+  const totalSeconds = activeCycles ? activeCycles.minutesAmount * 60 : 0
 
   useEffect(() => {
     let interval: number
     if (activeCycles) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycles.startDate),
+        const secondsDifference = differenceInSeconds(
+          new Date(),
+          activeCycles.startDate,
         )
+
+        if (secondsDifference >= totalSeconds) {
+          setCycles((state) =>
+            state.map((cycle) => {
+              if (cycle.id === activeCyclesId) {
+                return { ...cycle, fineshedtDate: new Date() }
+              }
+              return cycle
+            }),
+          )
+          setAmountSecondsPassed(totalSeconds)
+        } else {
+          setAmountSecondsPassed(secondsDifference)
+        }
       }, 1000)
     }
 
     return () => {
       clearInterval(interval)
     }
-  }, [activeCycles])
+  }, [activeCycles, activeCyclesId, totalSeconds])
 
   function handleCreateNewCycle(data: NewCycleForm) {
     const newCycle: ICycle = {
@@ -96,7 +113,6 @@ export function Home() {
     setActiveCyclesId(null)
   }
 
-  const totalSeconds = activeCycles ? activeCycles.minutesAmount * 60 : 0
   const currentSeconds = activeCycles ? totalSeconds - amountSecondsPassed : 0
 
   const minutesAmount = Math.floor(currentSeconds / 60)
