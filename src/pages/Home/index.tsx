@@ -85,8 +85,8 @@ export function Home() {
 
   function handleInterruptCycle() {
     setAmountSecondsPassed(0)
-    setCycles(
-      cycles.map((cycle) => {
+    setCycles((state) =>
+      state.map((cycle) => {
         if (cycle.id === activeCyclesId) {
           return { ...cycle, interruptDate: new Date() }
         }
