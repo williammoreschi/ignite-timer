@@ -29,9 +29,11 @@ interface ICylesContextProviderProps {
   children: ReactNode
 }
 
-export const CyclesContex = createContext({} as ICyclesContex)
+export const CyclesContext = createContext({} as ICyclesContex)
 
-export function CyclesContexProvider({ children }: ICylesContextProviderProps) {
+export function CyclesContextProvider({
+  children,
+}: ICylesContextProviderProps) {
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
   const [activeCyclesId, setActiveCyclesId] = useState<string | null>(null)
   const [cycles, setCycles] = useState<ICycle[]>([])
@@ -79,7 +81,7 @@ export function CyclesContexProvider({ children }: ICylesContextProviderProps) {
   }
 
   return (
-    <CyclesContex.Provider
+    <CyclesContext.Provider
       value={{
         activeCycles,
         activeCyclesId,
@@ -92,6 +94,6 @@ export function CyclesContexProvider({ children }: ICylesContextProviderProps) {
       }}
     >
       {children}
-    </CyclesContex.Provider>
+    </CyclesContext.Provider>
   )
 }
