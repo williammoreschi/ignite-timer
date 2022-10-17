@@ -48,7 +48,7 @@ export function CyclesContextProvider({
   }
 
   function markCurrentCyclesAsFinished() {
-    dispatch(markCurrentCyclesAsFinishedAction(activeCyclesId))
+    dispatch(markCurrentCyclesAsFinishedAction())
   }
 
   function createNewCycle(data: ICreateNewCycle) {
@@ -65,7 +65,7 @@ export function CyclesContextProvider({
   }
 
   function interruptCycle() {
-    dispatch(interruptedCurruntCycleAction(activeCyclesId))
+    dispatch(interruptedCurruntCycleAction())
   }
 
   return (
