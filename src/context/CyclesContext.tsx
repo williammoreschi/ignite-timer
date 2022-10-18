@@ -1,3 +1,4 @@
+import { differenceInSeconds } from 'date-fns'
 import {
   createContext,
   ReactNode,
@@ -56,6 +57,19 @@ export function CyclesContextProvider({
   )
 
   const { cycles, activeCyclesId } = cyclesState
+
+  const activeCycles = cycles.find((cycle) => cycle.id === activeCyclesId)
+
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
+    if (activeCycles) {
+      const secondsDifference = differenceInSeconds(
+        new Date(),
+        new Date(activeCycles.startDate),
+      )
+      return secondsDifference
+    }
+    return 0
+  })
 
   useEffect(() => {
     const stateJSON = JSON.stringify(cyclesState)
